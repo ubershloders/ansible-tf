@@ -20,14 +20,14 @@ This repository contains an Ansible playbook for installing and configuring Open
 Prepare the Inventory File
 
 Create or edit the inventory.ini file to include your server details. Example:
-
+```
 [servers]
 your_server_ip_or_hostname ansible_ssh_user=your_user
 Prepare the Configuration File
-
+```
 Place your openttd.cfg file in the same directory as the playbook. This file will be copied to the target server.
 
-Run the Playbook
+## Run the Playbook
 
 Execute the playbook using the following command:
 
@@ -35,20 +35,12 @@ ansible-playbook -i inventory.ini install_openttd.yml
 Playbook Overview
 The playbook performs the following actions:
 
-Update Package Lists: Updates the package lists on the target server.
-Install OpenTTD: Installs the OpenTTD package from the Ubuntu repositories.
-Install Graphics and Sound Packs: Installs OpenGFX, OpenSFX, and OpenMSX packs.
-Create Configuration Directory: Ensures the .openttd directory exists in the user's home directory.
-Copy Configuration File: Copies openttd.cfg from the playbook directory to the target server's .openttd directory.
-Set Up Systemd Service: Creates a systemd service to run OpenTTD as a dedicated server.
-Start OpenTTD Service: Enables and starts the OpenTTD service.
-Wait for Service: Waits for the OpenTTD service to become active on its default port.
-Configuration
+### Configuration
 openttd.cfg: Customize this file according to your server's requirements. For detailed configuration options, refer to the OpenTTD Configuration Documentation.
-License
+### License
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
-Contributing
+### Contributing
 Feel free to fork the repository, make changes, and submit pull requests. Contributions are welcome!
 
 ### Key Points:
