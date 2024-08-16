@@ -1,0 +1,82 @@
+---
+- name: Install and configure OpenTTD on Ubuntu 24.04
+  hosts: all
+  become: yes
+  vars:
+    openttd_config_path: "{{ playbook_dir }}/openttd.cfg"
+    openttd_service_path: "/home/{{ ansible_user }}/.openttd"
+
+  tasks:
+    - name: Update package lists
+      apt:
+        update_cache: yes
+
+    - name: Install OpenTTD
+      apt:
+        name: openttd
+        state: present
+
+    - name: Install OpenGFX graphics set
+      apt:
+        name: openttd-opengfx
+        state: present
+
+    - name: Install OpenSFX sound set
+      apt:
+        name: openttd-opensfx
+        state: present
+
+    - name: Install OpenMSX music set
+      apt:
+        name: openttd-openmsx
+        state: present
+
+    - name: Ensure the OpenTTD configuration directory exists
+      ansible.builtin.file:
+        path: "{{ openttd_service_path }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Copy OpenTTD configuration file from localhost
+      ansible.builtin.copy:
+        src: "{{ openttd_config_path }}"  # Path to the file on the localhost (relative to the playbook)
+        dest: "{{ openttd_service_path }}/openttd.cfg"
+        mode: '0644'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Create a systemd service for OpenTTD
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/openttd.service
+        content: |
+          [Unit]
+          Description=OpenTTD Server
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/games/openttd -D
+          WorkingDirectory={{ openttd_service_path }}
+          User={{ ansible_user }}
+          Group={{ ansible_user }}
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd to apply the new service
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Enable and start OpenTTD service
+      ansible.builtin.systemd:
+        name: openttd
+        enabled: yes
+        state: started
+
+    - name: Wait for OpenTTD service to become active
+      ansible.builtin.wait_for:
+        port: 3979  # Default OpenTTD port; adjust if needed
+        state: started
+        timeout: 60
