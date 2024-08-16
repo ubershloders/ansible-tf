@@ -42,11 +42,3 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 
 ### Contributing
 Feel free to fork the repository, make changes, and submit pull requests. Contributions are welcome!
-
-### Key Points:
-
-- **Repository URL**: Replace with your actual GitHub repository URL.
-- **User and Server Details**: Customize the inventory file section with your server and user details.
-- **Email**: Update the contact email with your own.
-
-This README file provides a comprehensive guide for users to get started with your Ansible playbook.
